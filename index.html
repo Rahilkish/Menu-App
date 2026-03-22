@@ -14,17 +14,22 @@
 
     <main class="app-content">
         <div id="pantry-tab" class="tab-content active">
-            <div class="search-container">
+            <div class="sticky-controls">
                 <input type="text" id="search-bar" placeholder="Search your kitchen..." onkeyup="filterIngredients()">
+                <div class="view-toggle">
+                    <span style="font-size: 14px; color: var(--text-muted); font-weight: 500;">Layout:</span>
+                    <button id="btn-view-small" class="view-btn active" onclick="setView('small')">Small</button>
+                    <button id="btn-view-big" class="view-btn" onclick="setView('big')">Big</button>
+                </div>
             </div>
-            <div id="ingredient-categories" class="pb-safe">
+            
+            <div id="ingredient-categories" class="view-small pb-safe">
                 </div>
         </div>
 
         <div id="meals-tab" class="tab-content" style="display: none;">
             <div class="card">
                 <h2>Plan Your Day</h2>
-                <p class="subtitle">Select the meals you need ideas for:</p>
                 <div class="meal-toggles">
                     <label class="toggle-pill"><input type="checkbox" id="toggle-breakfast" checked> Breakfast</label>
                     <label class="toggle-pill"><input type="checkbox" id="toggle-lunch" checked> Lunch</label>
@@ -32,10 +37,8 @@
                 </div>
             </div>
 
-            <div class="actions">
-                <button class="btn-secondary" onclick="showOptions()">See All Possible Dishes</button>
-                <button class="btn-primary" onclick="decideForMe()">Decide For Me ✨</button>
-            </div>
+            <button class="btn-primary zomato-btn" onclick="decideForMe()">Decide For Me ✨</button>
+            <button class="btn-secondary" onclick="showOptions()">See All Possible Dishes</button>
 
             <div id="results" class="results-card">
                 <p class="empty-state">Tap 'Decide For Me' to get a fresh meal plan!</p>
@@ -55,10 +58,5 @@
     </nav>
 
     <script src="app.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
-    </script>
 </body>
 </html>
