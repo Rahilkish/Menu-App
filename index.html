@@ -2,44 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meal Decider</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kitchen Decider</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <div class="container">
-        <h1>🍽️ Meal Decider</h1>
-        
-        <div class="tabs">
-            <button class="tab-btn active" id="btn-pantry" onclick="switchTab('pantry-tab')">My Pantry</button>
-            <button class="tab-btn" id="btn-meals" onclick="switchTab('meals-tab')">Find Meals</button>
-        </div>
+    <header class="app-header">
+        <h1>🍽️ What's Cooking?</h1>
+    </header>
 
+    <main class="app-content">
         <div id="pantry-tab" class="tab-content active">
-            <input type="text" id="search-bar" placeholder="Search ingredients..." onkeyup="filterIngredients()">
-            <div id="ingredient-categories">
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="Search your kitchen..." onkeyup="filterIngredients()">
+            </div>
+            <div id="ingredient-categories" class="pb-safe">
                 </div>
         </div>
 
         <div id="meals-tab" class="tab-content" style="display: none;">
-            <h2>Select Meals</h2>
-            <div class="meal-toggles">
-                <label><input type="checkbox" id="toggle-breakfast" checked> Breakfast</label>
-                <label><input type="checkbox" id="toggle-lunch" checked> Lunch</label>
-                <label><input type="checkbox" id="toggle-dinner" checked> Dinner</label>
+            <div class="card">
+                <h2>Plan Your Day</h2>
+                <p class="subtitle">Select the meals you need ideas for:</p>
+                <div class="meal-toggles">
+                    <label class="toggle-pill"><input type="checkbox" id="toggle-breakfast" checked> Breakfast</label>
+                    <label class="toggle-pill"><input type="checkbox" id="toggle-lunch" checked> Lunch</label>
+                    <label class="toggle-pill"><input type="checkbox" id="toggle-dinner" checked> Dinner</label>
+                </div>
             </div>
 
             <div class="actions">
-                <button onclick="showOptions()">Show All Options</button>
-                <button class="primary" onclick="decideForMe()">Decide For Me!</button>
+                <button class="btn-secondary" onclick="showOptions()">See All Possible Dishes</button>
+                <button class="btn-primary" onclick="decideForMe()">Decide For Me ✨</button>
             </div>
 
-            <div id="results">
-                <p>Select your meals and tap a button above!</p>
+            <div id="results" class="results-card">
+                <p class="empty-state">Tap 'Decide For Me' to get a fresh meal plan!</p>
             </div>
         </div>
-    </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" id="btn-pantry" onclick="switchTab('pantry-tab')">
+            <span class="nav-icon">🛒</span>
+            <span class="nav-text">Pantry</span>
+        </button>
+        <button class="nav-item" id="btn-meals" onclick="switchTab('meals-tab')">
+            <span class="nav-icon">🍲</span>
+            <span class="nav-text">Meals</span>
+        </button>
+    </nav>
 
     <script src="app.js"></script>
     <script>
