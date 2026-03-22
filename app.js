@@ -1,4 +1,3 @@
-// --- DATASET ---
 const categorizedIngredients = {
     "Spices & Tadka (Masala)": ["Salt", "Turmeric (Haldi)", "Red Chilli Powder", "Cumin Seeds (Jeera)", "Mustard Seeds (Rai)", "Garam Masala", "Curry Leaves"],
     "Vegetables (Sabzi)": ["Onion", "Tomato", "Potato", "Green Chillies", "Garlic", "Ginger", "Spinach (Palak)", "Cauliflower", "Coriander Leaves"],
@@ -18,12 +17,6 @@ const recipes = [
 let savedIngredients = JSON.parse(localStorage.getItem('myIndianPantry')) || [];
 const categoryContainer = document.getElementById('ingredient-categories');
 
-// Helper to check if an ingredient is Non-Veg (for the Zomato dot)
-function isVeg(ing) {
-    return !["Chicken", "Eggs"].includes(ing);
-}
-
-// Render Zomato Style Menu
 for (const [category, items] of Object.entries(categorizedIngredients)) {
     const section = document.createElement('div');
     section.className = 'category-section';
@@ -31,23 +24,19 @@ for (const [category, items] of Object.entries(categorizedIngredients)) {
 
     items.forEach(ing => {
         const isAdded = savedIngredients.includes(ing);
-        const vegClass = isVeg(ing) ? 'veg' : 'non-veg';
         const btnText = isAdded ? 'ADDED' : 'ADD';
         const btnClass = isAdded ? 'add-btn added' : 'add-btn';
 
         const itemDiv = document.createElement('div');
         itemDiv.className = 'menu-item';
         
-        // Zomato Style HTML Structure
+        // New custom layout structure
         itemDiv.innerHTML = `
-            <div class="item-info">
-                <div class="veg-mark ${vegClass}"></div>
+            <div class="item-main">
+                <div class="img-placeholder">📸</div>
                 <h4 class="item-name">${ing}</h4>
             </div>
-            <div class="item-image-box">
-                <div class="img-placeholder">📸</div>
-                <button class="${btnClass}" onclick="toggleIngredient('${ing}', this)">${btnText}</button>
-            </div>
+            <button class="${btnClass}" onclick="toggleIngredient('${ing}', this)">${btnText}</button>
         `;
         section.appendChild(itemDiv);
     });
@@ -56,38 +45,33 @@ for (const [category, items] of Object.entries(categorizedIngredients)) {
 
 // --- LOGIC ---
 function toggleIngredient(ingredient, buttonElement) {
-    // Check if it's already in our saved array
     const index = savedIngredients.indexOf(ingredient);
     
     if (index === -1) {
-        // Not in list, add it
         savedIngredients.push(ingredient);
         buttonElement.innerText = 'ADDED';
         buttonElement.classList.add('added');
     } else {
-        // In list, remove it
         savedIngredients.splice(index, 1);
         buttonElement.innerText = 'ADD';
         buttonElement.classList.remove('added');
     }
-    
-    // Save to phone storage
     localStorage.setItem('myIndianPantry', JSON.stringify(savedIngredients));
 }
 
-function setView(size) {
+function setView(mode) {
     const container = document.getElementById('ingredient-categories');
-    const btnSmall = document.getElementById('btn-view-small');
-    const btnBig = document.getElementById('btn-view-big');
+    const btnList = document.getElementById('btn-view-list');
+    const btnImage = document.getElementById('btn-view-image');
 
-    if (size === 'small') {
-        container.className = 'view-small pb-safe';
-        btnSmall.classList.add('active');
-        btnBig.classList.remove('active');
+    if (mode === 'list') {
+        container.className = 'view-list pb-safe';
+        btnList.classList.add('active');
+        btnImage.classList.remove('active');
     } else {
-        container.className = 'view-big pb-safe';
-        btnBig.classList.add('active');
-        btnSmall.classList.remove('active');
+        container.className = 'view-image pb-safe';
+        btnImage.classList.add('active');
+        btnList.classList.remove('active');
     }
 }
 
@@ -137,9 +121,9 @@ function showOptions() {
         return;
     }
 
-    let html = "<h3 style='margin-top:0;'>You can make:</h3><ul>";
+    let html = "<h3 style='margin-top:0;'>You can make:</h3><ul style='padding-left: 20px;'>";
     possibleRecipes.forEach(r => {
-        html += `<li><strong>${r.name}</strong> <span style="color:var(--text-muted); font-size:12px;">(${r.type})</span></li>`;
+        html += `<li style='margin-bottom: 8px;'><strong>${r.name}</strong> <span style="color:var(--text-muted); font-size:12px;">(${r.type})</span></li>`;
     });
     html += "</ul>";
     resultsDiv.innerHTML = html;
