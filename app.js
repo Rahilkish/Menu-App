@@ -1,19 +1,24 @@
+// --- REORDERED DATASET ---
 const categorizedIngredients = {
-    "Spices & Tadka (Masala)": ["Salt", "Turmeric (Haldi)", "Red Chilli Powder", "Cumin Seeds (Jeera)", "Mustard Seeds (Rai)", "Garam Masala", "Curry Leaves"],
-    "Vegetables (Sabzi)": ["Onion", "Tomato", "Potato", "Green Chillies", "Garlic", "Ginger", "Spinach (Palak)", "Cauliflower", "Coriander Leaves"],
-    "Lentils & Grains (Dal/Atta)": ["Basmati Rice", "Toor Dal", "Moong Dal", "Wheat Flour (Atta)", "Poha"],
-    "Dairy, Oil & Protein": ["Cooking Oil", "Ghee", "Milk", "Eggs", "Paneer", "Chicken"]
+    // Fresh/Perishable things first
+    "Vegetables (Sabzi)": ["Onion", "Tomato", "Potato", "Green Chillies", "Garlic", "Ginger", "Spinach (Palak)", "Cauliflower", "Coriander Leaves", "Curry Leaves"],
+    // Dairy & Proteins next
+    "Dairy, Oil & Protein": ["Cooking Oil", "Ghee", "Milk", "Eggs", "Paneer", "Chicken"],
+    // Dry storage last
+    "Lentils & Grains (Dal/Atta)": ["Basmati Rice", "Toor Dal", "Moong Dal", "Wheat Flour (Atta)", "Poha"]
 };
 
+// --- RECIPES (Masalas removed, assumed always available) ---
 const recipes = [
-    { name: "Kanda Batata Poha", ingredients: ["Poha", "Onion", "Potato", "Mustard Seeds (Rai)", "Turmeric (Haldi)", "Curry Leaves", "Cooking Oil", "Green Chillies", "Salt"], type: "breakfast" },
-    { name: "Egg Bhurji", ingredients: ["Eggs", "Onion", "Tomato", "Green Chillies", "Turmeric (Haldi)", "Cooking Oil", "Salt"], type: "breakfast" },
-    { name: "Dal Tadka & Rice", ingredients: ["Toor Dal", "Basmati Rice", "Onion", "Tomato", "Garlic", "Cumin Seeds (Jeera)", "Turmeric (Haldi)", "Ghee", "Salt"], type: "lunch" },
-    { name: "Aloo Gobi Sabzi", ingredients: ["Potato", "Cauliflower", "Onion", "Tomato", "Turmeric (Haldi)", "Garam Masala", "Cooking Oil", "Salt"], type: "lunch" },
-    { name: "Simple Chicken Curry", ingredients: ["Chicken", "Onion", "Tomato", "Garlic", "Ginger", "Garam Masala", "Red Chilli Powder", "Cooking Oil", "Salt"], type: "dinner" },
-    { name: "Palak Paneer", ingredients: ["Spinach (Palak)", "Paneer", "Onion", "Tomato", "Garlic", "Garam Masala", "Ghee", "Salt"], type: "dinner" }
+    { name: "Kanda Batata Poha", ingredients: ["Poha", "Onion", "Potato", "Curry Leaves", "Cooking Oil", "Green Chillies"], type: "breakfast" },
+    { name: "Egg Bhurji", ingredients: ["Eggs", "Onion", "Tomato", "Green Chillies", "Cooking Oil"], type: "breakfast" },
+    { name: "Dal Tadka & Rice", ingredients: ["Toor Dal", "Basmati Rice", "Onion", "Tomato", "Garlic", "Ghee"], type: "lunch" },
+    { name: "Aloo Gobi Sabzi", ingredients: ["Potato", "Cauliflower", "Onion", "Tomato", "Cooking Oil"], type: "lunch" },
+    { name: "Simple Chicken Curry", ingredients: ["Chicken", "Onion", "Tomato", "Garlic", "Ginger", "Cooking Oil"], type: "dinner" },
+    { name: "Palak Paneer", ingredients: ["Spinach (Palak)", "Paneer", "Onion", "Tomato", "Garlic", "Ghee"], type: "dinner" }
 ];
 
+// Load memory from device
 let savedIngredients = JSON.parse(localStorage.getItem('myIndianPantry')) || [];
 const categoryContainer = document.getElementById('ingredient-categories');
 
@@ -24,13 +29,13 @@ for (const [category, items] of Object.entries(categorizedIngredients)) {
 
     items.forEach(ing => {
         const isAdded = savedIngredients.includes(ing);
-        const btnText = isAdded ? 'ADDED' : 'ADD';
+        // Change text to + or Checkmark
+        const btnText = isAdded ? '✓' : '+';
         const btnClass = isAdded ? 'add-btn added' : 'add-btn';
 
         const itemDiv = document.createElement('div');
         itemDiv.className = 'menu-item';
         
-        // New custom layout structure
         itemDiv.innerHTML = `
             <div class="item-main">
                 <div class="img-placeholder">📸</div>
@@ -48,14 +53,17 @@ function toggleIngredient(ingredient, buttonElement) {
     const index = savedIngredients.indexOf(ingredient);
     
     if (index === -1) {
+        // Add item
         savedIngredients.push(ingredient);
-        buttonElement.innerText = 'ADDED';
+        buttonElement.innerText = '✓';
         buttonElement.classList.add('added');
     } else {
+        // Remove item
         savedIngredients.splice(index, 1);
-        buttonElement.innerText = 'ADD';
+        buttonElement.innerText = '+';
         buttonElement.classList.remove('added');
     }
+    // Save to phone memory immediately
     localStorage.setItem('myIndianPantry', JSON.stringify(savedIngredients));
 }
 
@@ -64,11 +72,13 @@ function setView(mode) {
     const btnList = document.getElementById('btn-view-list');
     const btnImage = document.getElementById('btn-view-image');
 
+    if (!container || !btnList || !btnImage) return;
+
     if (mode === 'list') {
         container.className = 'view-list pb-safe';
         btnList.classList.add('active');
         btnImage.classList.remove('active');
-    } else {
+    } else if (mode === 'image') {
         container.className = 'view-image pb-safe';
         btnImage.classList.add('active');
         btnList.classList.remove('active');
@@ -117,7 +127,7 @@ function showOptions() {
     const resultsDiv = document.getElementById('results');
     
     if (possibleRecipes.length === 0) {
-        resultsDiv.innerHTML = "<p class='empty-state'>Not enough ingredients! Add more from the Pantry.</p>";
+        resultsDiv.innerHTML = "<p class='empty-state'>Not enough core ingredients! Add more from the Pantry.</p>";
         return;
     }
 
