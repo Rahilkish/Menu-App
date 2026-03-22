@@ -1,12 +1,15 @@
+/* =========================================
+   1. BASE VARIABLES & THEME
+   ========================================= */
 :root {
-    --primary: #FF7E67;
-    --primary-light: #FFF0ED;
-    --bg-color: #F8F9FA;
-    --card-bg: #FFFFFF;
-    --text-main: #2D3436;
-    --text-muted: #636E72;
-    --border: #DFE6E9;
-    --nav-height: 70px;
+    --primary: #FF7E67;         /* Warm coral/saffron */
+    --primary-light: #FFF0ED;   /* Very light coral for active states */
+    --bg-color: #F8F9FA;        /* Off-white app background */
+    --card-bg: #FFFFFF;         /* Pure white for sections */
+    --text-main: #2D3436;       /* Dark grey for readability */
+    --text-muted: #636E72;      /* Lighter grey for secondary text */
+    --border: #DFE6E9;          /* Soft border color */
+    --nav-height: 70px;         /* Height of the bottom tab bar */
 }
 
 body {
@@ -15,15 +18,33 @@ body {
     color: var(--text-main);
     margin: 0;
     padding: 0;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent; /* Removes blue tap flash on mobile */
 }
 
-.app-header { background: var(--card-bg); padding: 15px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-.app-header h1 { margin: 0; font-size: 20px; font-weight: 800; }
+/* =========================================
+   2. APP HEADER & LAYOUT
+   ========================================= */
+.app-header { 
+    background: var(--card-bg); 
+    padding: 15px 20px; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+}
 
-.app-content { padding-bottom: calc(var(--nav-height) + 20px); max-width: 600px; margin: 0 auto; }
+.app-header h1 { 
+    margin: 0; 
+    font-size: 20px; 
+    font-weight: 800; 
+}
 
-/* --- STICKY SEARCH & TOGGLE --- */
+.app-content { 
+    padding-bottom: calc(var(--nav-height) + 20px); 
+    max-width: 600px; /* Keeps it looking like an app even on desktop */
+    margin: 0 auto; 
+}
+
+/* =========================================
+   3. STICKY CONTROLS (Search & View Toggles)
+   ========================================= */
 .sticky-controls {
     position: sticky;
     top: 0;
@@ -31,36 +52,70 @@ body {
     padding: 15px;
     z-index: 5;
     display: flex;
+    align-items: center; /* Prevents buttons from stretching to match search bar */
     gap: 10px;
 }
+
 #search-bar {
-    flex: 1;
+    flex: 1; /* Takes up all available space to the left of the buttons */
     padding: 12px 16px;
     font-size: 16px;
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 10px;
     box-sizing: border-box;
+    margin: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
 }
-#search-bar:focus { outline: none; border-color: var(--primary); }
 
-.view-toggle { display: flex; gap: 5px; }
+#search-bar:focus { 
+    outline: none; 
+    border-color: var(--primary); 
+}
+
+/* View Toggle Icons */
+.view-toggle { 
+    display: flex; 
+    gap: 8px; 
+}
+
 .view-btn {
-    padding: 10px 12px;
+    width: 42px;  /* Locked exact width */
+    height: 42px; /* Locked exact height */
+    padding: 0;
     border-radius: 10px;
     border: 1px solid var(--border);
     background: var(--card-bg);
-    font-size: 20px;
+    font-size: 18px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0; /* Prevents browser from squishing the button */
+    transition: 0.2s;
 }
-.view-btn.active { background: var(--primary-light); border-color: var(--primary); }
 
-/* --- MENU ITEMS --- */
-.category-section { background: var(--card-bg); margin-bottom: 15px; padding: 15px; border-radius: 12px; }
-.category-section h3 { margin: 0 0 10px 0; font-size: 18px; font-weight: 700; }
+.view-btn.active { 
+    background: var(--primary-light); 
+    border-color: var(--primary); 
+}
+
+/* =========================================
+   4. PANTRY MENU ITEMS
+   ========================================= */
+.category-section { 
+    background: var(--card-bg); 
+    margin: 0 15px 15px 15px; 
+    padding: 15px; 
+    border-radius: 12px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.category-section h3 { 
+    margin: 0 0 10px 0; 
+    font-size: 18px; 
+    font-weight: 700; 
+}
 
 .menu-item {
     display: flex;
@@ -68,15 +123,25 @@ body {
     justify-content: space-between;
     border-bottom: 1px solid var(--border);
 }
-.menu-item:last-child { border-bottom: none; }
 
+.menu-item:last-child { 
+    border-bottom: none; 
+}
+
+/* Left side of item (Image + Name) */
 .item-main {
     display: flex;
     align-items: center;
-    gap: 15px; /* Keeps name close to image */
+    gap: 15px;
     flex: 1;
 }
-.item-name { margin: 0; font-weight: 600; color: var(--text-main); }
+
+.item-name { 
+    margin: 0; 
+    font-weight: 600; 
+    color: var(--text-main); 
+}
+
 .img-placeholder {
     background: #f0f0f0;
     border-radius: 10px;
@@ -86,53 +151,162 @@ body {
     font-size: 24px;
     color: #ccc;
     flex-shrink: 0;
+    object-fit: cover;
 }
 
-/* Add Button Pill */
+/* Right side of item: Circular Plus/Check Button */
 .add-btn {
-    background: white;
+    background: var(--primary-light);
     color: var(--primary);
-    border: 2px solid var(--primary);
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 700;
-    font-size: 13px;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%; /* Makes it a perfect circle */
+    font-weight: 800;
+    font-size: 18px;
     cursor: pointer;
-    width: 85px; /* Uniform width so buttons align perfectly in a column */
-    text-align: center;
-    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
 }
-.add-btn.added { background: var(--primary); color: white; }
 
-/* --- VIEW MODES --- */
-/* Image View (Default) */
+.add-btn.added { 
+    background: var(--primary); 
+    color: white; 
+    transform: scale(1.1); /* Subtle pop effect when checked */
+}
+
+/* =========================================
+   5. VIEW MODES (Controlled by JS)
+   ========================================= */
+/* Image View (Shows big images) */
 .view-image .menu-item { padding: 12px 0; }
 .view-image .img-placeholder { width: 110px; height: 110px; display: flex; }
 .view-image .item-name { font-size: 17px; }
 
-/* List View (Compact) */
+/* List View (Hides images entirely) */
 .view-list .menu-item { padding: 8px 0; }
 .view-list .img-placeholder { display: none; }
 .view-list .item-name { font-size: 15px; }
 
-/* --- BOTTOM NAV & MISC --- */
-.bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-height);
-    background: var(--card-bg); display: flex; justify-content: space-around; align-items: center;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.05); padding-bottom: env(safe-area-inset-bottom); z-index: 100;
+/* =========================================
+   6. MEALS TAB & RESULTS
+   ========================================= */
+.card { 
+    background: var(--card-bg); 
+    padding: 20px; 
+    margin: 15px; 
+    border-radius: 12px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
-.nav-item { background: none; border: none; display: flex; flex-direction: column; align-items: center; color: var(--text-muted); padding: 10px; }
-.nav-item.active { color: var(--primary); }
-.nav-icon { font-size: 22px; margin-bottom: 4px; }
-.nav-text { font-size: 11px; font-weight: 700; text-transform: uppercase; }
 
-.card { background: var(--card-bg); padding: 20px; margin: 15px; border-radius: 12px; }
-.meal-toggles { display: flex; gap: 10px; margin-top: 15px;}
-.toggle-pill { flex: 1; text-align: center; padding: 10px; border-radius: 8px; font-weight: 600; border: 1px solid var(--border); }
-.toggle-pill:has(input:checked) { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
-input[type="checkbox"] { display: none; }
+.meal-toggles { 
+    display: flex; 
+    gap: 10px; 
+    margin-top: 15px;
+}
 
-button.btn-primary, button.btn-secondary { width: calc(100% - 30px); padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 700; border: none; margin: 0 15px 15px 15px; cursor: pointer; }
-.btn-primary { background: var(--primary); color: white; }
-.btn-secondary { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
-.results-card { background: var(--card-bg); padding: 20px; margin: 15px; border-radius: 12px; }
+.toggle-pill { 
+    flex: 1; 
+    text-align: center; 
+    padding: 12px 10px; 
+    border-radius: 8px; 
+    font-weight: 600; 
+    border: 1px solid var(--border); 
+    font-size: 14px;
+}
+
+.toggle-pill:has(input:checked) { 
+    background: var(--primary-light); 
+    color: var(--primary); 
+    border-color: var(--primary); 
+}
+
+input[type="checkbox"] { 
+    display: none; 
+}
+
+/* Action Buttons */
+button.btn-primary, button.btn-secondary { 
+    width: calc(100% - 30px); 
+    padding: 16px; 
+    border-radius: 12px; 
+    font-size: 16px; 
+    font-weight: 700; 
+    border: none; 
+    margin: 0 15px 15px 15px; 
+    cursor: pointer; 
+}
+
+.btn-primary { 
+    background: var(--primary); 
+    color: white; 
+    box-shadow: 0 4px 12px rgba(255, 126, 103, 0.3);
+}
+
+.btn-secondary { 
+    background: transparent; 
+    color: var(--primary); 
+    border: 2px solid var(--primary); 
+}
+
+.results-card { 
+    background: var(--card-bg); 
+    padding: 20px; 
+    margin: 15px; 
+    border-radius: 12px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.empty-state {
+    color: var(--text-muted);
+    text-align: center;
+    font-style: italic;
+    margin: 0;
+}
+
+/* =========================================
+   7. BOTTOM NAVIGATION BAR
+   ========================================= */
+.bottom-nav { 
+    position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    height: var(--nav-height); 
+    background: var(--card-bg); 
+    display: flex; 
+    justify-content: space-around; 
+    align-items: center; 
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05); 
+    padding-bottom: env(safe-area-inset-bottom); /* iPhone notch support */
+    z-index: 100; 
+}
+
+.nav-item { 
+    background: none; 
+    border: none; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    color: var(--text-muted); 
+    padding: 10px; 
+    cursor: pointer;
+}
+
+.nav-item.active { 
+    color: var(--primary); 
+}
+
+.nav-icon { 
+    font-size: 24px; 
+    margin-bottom: 4px; 
+}
+
+.nav-text { 
+    font-size: 11px; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+}
