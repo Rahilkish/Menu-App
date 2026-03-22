@@ -1,8 +1,10 @@
-// --- YOUR DATASET ---
-const ingredients = [
-    "Eggs", "Bread", "Milk", "Rice", "Chicken", "Onion", 
-    "Tomato", "Potato", "Pasta", "Cheese", "Oil", "Butter", "Garlic"
-];
+// --- DATASET ---
+const categorizedIngredients = {
+    "Dairy & Eggs": ["Eggs", "Milk", "Cheese", "Butter"],
+    "Pantry & Carbs": ["Bread", "Rice", "Pasta", "Oil"],
+    "Produce": ["Onion", "Tomato", "Potato", "Garlic"],
+    "Proteins": ["Chicken"]
+};
 
 const recipes = [
     { name: "Scrambled Eggs", ingredients: ["Eggs", "Butter", "Milk"], type: "breakfast" },
@@ -13,43 +15,100 @@ const recipes = [
     { name: "Mashed Potatoes", ingredients: ["Potato", "Butter", "Milk"], type: "dinner" }
 ];
 
-// --- APP LOGIC ---
-// 1. Load ingredients onto the screen
-const ingredientContainer = document.getElementById('ingredient-list');
-ingredients.forEach(ing => {
-    const label = document.createElement('label');
-    label.innerHTML = `<input type="checkbox" value="${ing}" class="ingredient-checkbox"> ${ing}`;
-    ingredientContainer.appendChild(label);
-});
+// --- INITIALIZATION ---
+// Load saved ingredients from local storage, or start empty
+let savedIngredients = JSON.parse(localStorage.getItem('myPantry')) || [];
 
-// 2. Helper function to find what we can make
+const categoryContainer = document.getElementById('ingredient-categories');
+
+// Render ingredients by category
+for (const [category, items] of Object.entries(categorizedIngredients)) {
+    // Create Category Header
+    const header = document.createElement('h3');
+    header.textContent = category;
+    categoryContainer.appendChild(header);
+
+    // Create Grid for this category
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+
+    items.forEach(ing => {
+        const label = document.createElement('label');
+        label.className = 'ingredient-label';
+        
+        // Check if ingredient was previously saved
+        const isChecked = savedIngredients.includes(ing) ? 'checked' : '';
+        
+        label.innerHTML = `<input type="checkbox" value="${ing}" class="ingredient-checkbox" ${isChecked} onchange="savePantry()"> <span class="ing-name">${ing}</span>`;
+        grid.appendChild(label);
+    });
+
+    categoryContainer.appendChild(grid);
+}
+
+// --- NEW FEATURES LOGIC ---
+
+// Save current selections to phone storage
+function savePantry() {
+    const checkboxes = document.querySelectorAll('.ingredient-checkbox:checked');
+    const selectedIngs = Array.from(checkboxes).map(cb => cb.value);
+    localStorage.setItem('myPantry', JSON.stringify(selectedIngs));
+}
+
+// Tab Switching logic
+function switchTab(tabId) {
+    // Hide all tabs
+    document.getElementById('pantry-tab').style.display = 'none';
+    document.getElementById('meals-tab').style.display = 'none';
+    
+    // Remove active class from buttons
+    document.getElementById('btn-pantry').classList.remove('active');
+    document.getElementById('btn-meals').classList.remove('active');
+
+    // Show target tab and set button active
+    document.getElementById(tabId).style.display = 'block';
+    if (tabId === 'pantry-tab') document.getElementById('btn-pantry').classList.add('active');
+    if (tabId === 'meals-tab') document.getElementById('btn-meals').classList.add('active');
+}
+
+// Search Filter
+function filterIngredients() {
+    const searchTerm = document.getElementById('search-bar').value.toLowerCase();
+    const labels = document.querySelectorAll('.ingredient-label');
+
+    labels.forEach(label => {
+        const text = label.querySelector('.ing-name').textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+            label.style.display = 'flex';
+        } else {
+            label.style.display = 'none';
+        }
+    });
+}
+
+// --- RECIPE LOGIC ---
 function getAvailableRecipes() {
-    // Get checked ingredients
+    // Always check what is currently ticked
     const checkboxes = document.querySelectorAll('.ingredient-checkbox:checked');
     const selectedIngs = Array.from(checkboxes).map(cb => cb.value);
 
-    // Get selected meal types
     const types = [];
     if(document.getElementById('toggle-breakfast').checked) types.push('breakfast');
     if(document.getElementById('toggle-lunch').checked) types.push('lunch');
     if(document.getElementById('toggle-dinner').checked) types.push('dinner');
 
-    // Filter recipes
     return recipes.filter(recipe => {
-        // Check if meal type is selected
         if (!types.includes(recipe.type)) return false;
-        // Check if user has ALL required ingredients for this recipe
         return recipe.ingredients.every(neededIng => selectedIngs.includes(neededIng));
     });
 }
 
-// 3. Show all possible options
 function showOptions() {
     const possibleRecipes = getAvailableRecipes();
     const resultsDiv = document.getElementById('results');
     
     if (possibleRecipes.length === 0) {
-        resultsDiv.innerHTML = "<p>Not enough ingredients for a full recipe yet! Try selecting more.</p>";
+        resultsDiv.innerHTML = "<p>Not enough ingredients for a full recipe! Add more in the Pantry tab.</p>";
         return;
     }
 
@@ -61,20 +120,16 @@ function showOptions() {
     resultsDiv.innerHTML = html;
 }
 
-// 4. Decide for me (The Magic Button)
 function decideForMe() {
     const possibleRecipes = getAvailableRecipes();
     const resultsDiv = document.getElementById('results');
-    const plan = {};
-
-    // Group available recipes by type
     const byType = { breakfast: [], lunch: [], dinner: [] };
+    
     possibleRecipes.forEach(r => byType[r.type].push(r));
 
     let html = "<h3>Your Meal Plan:</h3>";
     let madePlan = false;
 
-    // Pick a random recipe for each selected category
     ['breakfast', 'lunch', 'dinner'].forEach(type => {
         if (document.getElementById(`toggle-${type}`).checked) {
             if (byType[type].length > 0) {
@@ -82,7 +137,7 @@ function decideForMe() {
                 html += `<p><strong>${type.toUpperCase()}:</strong> ${randomRecipe.name}</p>`;
                 madePlan = true;
             } else {
-                html += `<p><strong>${type.toUpperCase()}:</strong> <em>No recipes available with current ingredients.</em></p>`;
+                html += `<p><strong>${type.toUpperCase()}:</strong> <em>No recipes available.</em></p>`;
             }
         }
     });
