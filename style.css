@@ -50,7 +50,7 @@ body {
 .view-btn.active { background: var(--primary-light); border-color: var(--primary); }
 
 /* =========================================
-   4. PANTRY MENU ITEMS (With Image Support)
+   4. PANTRY MENU ITEMS
    ========================================= */
 .category-section { background: var(--card-bg); margin: 0 15px 15px 15px; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
 .category-section h3 { margin: 0 0 10px 0; font-size: 18px; font-weight: 700; }
@@ -59,27 +59,9 @@ body {
 .item-main { display: flex; align-items: center; gap: 15px; flex: 1; }
 .item-name { margin: 0; font-weight: 600; color: var(--text-main); }
 
-/* The box that holds either the real image or the fallback emoji */
-.img-box {
-    flex-shrink: 0;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #f0f0f0;
-}
-.real-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.fallback-icon {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    color: #ccc;
-}
+.img-box { flex-shrink: 0; border-radius: 10px; overflow: hidden; background: #f0f0f0; }
+.real-image { width: 100%; height: 100%; object-fit: cover; }
+.fallback-icon { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; font-size: 24px; color: #ccc; }
 
 .add-btn {
     background: var(--primary-light); color: var(--primary); border: none; width: 36px; height: 36px;
@@ -89,7 +71,7 @@ body {
 .add-btn.added { background: var(--primary); color: white; transform: scale(1.1); }
 
 /* =========================================
-   5. VIEW MODES (Controlled by JS)
+   5. VIEW MODES
    ========================================= */
 .view-image .menu-item { padding: 12px 0; }
 .view-image .img-box { width: 110px; height: 110px; display: block; }
@@ -100,7 +82,7 @@ body {
 .view-list .item-name { font-size: 15px; }
 
 /* =========================================
-   6. MEALS TAB & RESULTS
+   6. MEALS TAB
    ========================================= */
 .card { background: var(--card-bg); padding: 20px; margin: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
 .meal-toggles { display: flex; gap: 10px; margin-top: 15px;}
@@ -124,7 +106,7 @@ button.btn-primary, button.btn-secondary { width: calc(100% - 30px); padding: 16
 .nav-text { font-size: 11px; font-weight: 700; text-transform: uppercase; }
 
 /* =========================================
-   8. SETUP TAB STYLES (MOBILE OPTIMIZED)
+   8. SETUP TAB
    ========================================= */
 .form-input {
     width: 100%; padding: 16px; border: 1px solid var(--border); border-radius: 12px;
@@ -133,15 +115,28 @@ button.btn-primary, button.btn-secondary { width: calc(100% - 30px); padding: 16
 }
 .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255, 126, 103, 0.15); }
 .subtitle { font-size: 14px; color: var(--text-muted); margin-top: 5px; margin-bottom: 12px; line-height: 1.4; }
-.setup-grid {
-    display: flex; flex-wrap: wrap; gap: 10px; max-height: 250px; overflow-y: auto;
-    padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-color);
-    margin-bottom: 20px;
-}
-.setup-grid label {
-    font-size: 14px; background: var(--card-bg); padding: 10px 16px; border-radius: 20px;
-    border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; transition: 0.2s ease;
-}
+.setup-grid { display: flex; flex-wrap: wrap; gap: 10px; max-height: 250px; overflow-y: auto; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-color); margin-bottom: 20px; }
+.setup-grid label { font-size: 14px; background: var(--card-bg); padding: 10px 16px; border-radius: 20px; border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; transition: 0.2s ease; }
 .setup-grid label:has(input:checked) { background: var(--primary-light); color: var(--primary); border-color: var(--primary); font-weight: 600; }
 .setup-grid input[type="checkbox"] { display: none; }
 button.form-btn { width: 100%; margin: 10px 0 0 0; }
+
+/* =========================================
+   9. INSTALL MODAL (POP-UP)
+   ========================================= */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; padding: 20px; backdrop-filter: blur(4px);
+}
+.modal-content {
+    background: var(--card-bg); padding: 25px; border-radius: 16px;
+    width: 100%; max-width: 350px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    position: relative; text-align: center;
+}
+.close-btn {
+    position: absolute; top: 15px; right: 15px; background: transparent;
+    border: none; font-size: 18px; color: var(--text-muted); cursor: pointer;
+    width: auto; padding: 5px; margin: 0; font-weight: bold;
+}
