@@ -43,11 +43,19 @@ function renderPantry() {
             const btnText = isAdded ? '✓' : '+';
             const btnClass = isAdded ? 'add-btn added' : 'add-btn';
 
+            // SMART IMAGE LINKER: Converts "Green Chillies" to "green-chillies.jpg"
+            const imgFileName = ing.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '.jpg';
+
             const itemDiv = document.createElement('div');
             itemDiv.className = 'menu-item';
+            
+            // Includes the error fallback if the image isn't found
             itemDiv.innerHTML = `
                 <div class="item-main">
-                    <div class="img-placeholder">📸</div>
+                    <div class="img-box">
+                        <img src="images/${imgFileName}" class="real-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="fallback-icon" style="display:none;">📸</div>
+                    </div>
                     <h4 class="item-name">${ing}</h4>
                 </div>
                 <button class="${btnClass}" onclick="toggleIngredient('${ing}', this)">${btnText}</button>
