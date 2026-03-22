@@ -1,17 +1,47 @@
-// --- DEFAULT DATASET ---
+// --- PREMIUM INDIAN DATASET (Core vs Optional Logic) ---
 const defaultData = {
     categories: {
-        "Vegetables (Sabzi)": ["Onion", "Tomato", "Potato", "Green Chillies", "Garlic", "Ginger", "Spinach (Palak)", "Cauliflower", "Coriander Leaves", "Curry Leaves"],
-        "Dairy, Oil & Protein": ["Cooking Oil", "Ghee", "Milk", "Eggs", "Paneer", "Chicken"],
-        "Lentils & Grains (Dal/Atta)": ["Basmati Rice", "Toor Dal", "Moong Dal", "Wheat Flour (Atta)", "Poha"]
+        "Vegetables & Fresh (Sabzi)": [
+            "Onion", "Tomato", "Potato", "Green Chillies", "Garlic", "Ginger", 
+            "Spinach (Palak)", "Cauliflower", "Coriander Leaves", "Curry Leaves", 
+            "Capsicum", "Peas", "Carrot", "Lemon"
+        ],
+        "Dairy & Protein": [
+            "Ghee", "Butter", "Milk", "Curd (Dahi)", "Fresh Cream", 
+            "Eggs", "Paneer", "Chicken"
+        ],
+        "Lentils & Grains (Dal/Atta)": [
+            "Basmati Rice", "Toor Dal", "Moong Dal", "Chana Dal", "Urad Dal", 
+            "Rajma", "Chickpeas (Chole)", "Wheat Flour (Atta)", "Poha", "Besan", "Semolina (Suji)"
+        ]
     },
     recipes: [
-        { name: "Kanda Batata Poha", ingredients: ["Poha", "Onion", "Potato", "Curry Leaves", "Cooking Oil", "Green Chillies"], type: "breakfast" },
-        { name: "Egg Bhurji", ingredients: ["Eggs", "Onion", "Tomato", "Green Chillies", "Cooking Oil"], type: "breakfast" },
-        { name: "Dal Tadka & Rice", ingredients: ["Toor Dal", "Basmati Rice", "Onion", "Tomato", "Garlic", "Ghee"], type: "lunch" },
-        { name: "Aloo Gobi Sabzi", ingredients: ["Potato", "Cauliflower", "Onion", "Tomato", "Cooking Oil"], type: "lunch" },
-        { name: "Simple Chicken Curry", ingredients: ["Chicken", "Onion", "Tomato", "Garlic", "Ginger", "Cooking Oil"], type: "dinner" },
-        { name: "Palak Paneer", ingredients: ["Spinach (Palak)", "Paneer", "Onion", "Tomato", "Garlic", "Ghee"], type: "dinner" }
+        // --- BREAKFAST ---
+        { name: "Kanda Batata Poha", coreIngredients: ["Poha", "Onion", "Potato"], optionalIngredients: ["Curry Leaves", "Green Chillies", "Lemon"], type: "breakfast" },
+        { name: "Masala Egg Bhurji", coreIngredients: ["Eggs", "Onion", "Tomato"], optionalIngredients: ["Green Chillies", "Coriander Leaves"], type: "breakfast" },
+        { name: "Besan Cheela", coreIngredients: ["Besan", "Onion", "Tomato"], optionalIngredients: ["Green Chillies", "Coriander Leaves"], type: "breakfast" },
+        { name: "Vegetable Upma", coreIngredients: ["Semolina (Suji)", "Onion"], optionalIngredients: ["Green Chillies", "Curry Leaves", "Carrot"], type: "breakfast" },
+        { name: "Paneer Paratha", coreIngredients: ["Wheat Flour (Atta)", "Paneer"], optionalIngredients: ["Green Chillies", "Coriander Leaves", "Ghee"], type: "breakfast" },
+        { name: "Aloo Paratha", coreIngredients: ["Wheat Flour (Atta)", "Potato"], optionalIngredients: ["Green Chillies", "Coriander Leaves", "Ghee"], type: "breakfast" },
+
+        // --- LUNCH / DINNER (Main Meals Pool) ---
+        { name: "Dal Tadka & Rice", coreIngredients: ["Toor Dal", "Basmati Rice", "Onion", "Tomato"], optionalIngredients: ["Garlic", "Ghee", "Coriander Leaves"], type: "lunch" },
+        { name: "Punjabi Chole", coreIngredients: ["Chickpeas (Chole)", "Onion", "Tomato"], optionalIngredients: ["Garlic", "Ginger"], type: "lunch" },
+        { name: "Rajma Chawal", coreIngredients: ["Rajma", "Basmati Rice", "Onion", "Tomato"], optionalIngredients: ["Garlic", "Ginger", "Ghee"], type: "lunch" },
+        { name: "Aloo Gobi Masala", coreIngredients: ["Potato", "Cauliflower", "Onion", "Tomato"], optionalIngredients: ["Ginger"], type: "lunch" },
+        { name: "Lemon Rice", coreIngredients: ["Basmati Rice", "Lemon"], optionalIngredients: ["Green Chillies", "Curry Leaves"], type: "lunch" },
+        { name: "Chicken Pulao", coreIngredients: ["Chicken", "Basmati Rice", "Onion"], optionalIngredients: ["Tomato", "Curd (Dahi)", "Ghee"], type: "lunch" },
+        { name: "Paneer Bhurji", coreIngredients: ["Paneer", "Onion", "Tomato"], optionalIngredients: ["Green Chillies"], type: "lunch" },
+        { name: "Aloo Matar Sabzi", coreIngredients: ["Potato", "Peas", "Onion", "Tomato"], optionalIngredients: ["Garlic"], type: "lunch" },
+        { name: "Authentic Chicken Biryani", coreIngredients: ["Chicken", "Basmati Rice", "Onion", "Curd (Dahi)"], optionalIngredients: ["Garlic", "Ginger", "Coriander Leaves", "Ghee"], type: "dinner" },
+        { name: "Restaurant Style Butter Chicken", coreIngredients: ["Chicken", "Tomato", "Butter"], optionalIngredients: ["Garlic", "Ginger", "Fresh Cream"], type: "dinner" },
+        { name: "Homestyle Chicken Curry", coreIngredients: ["Chicken", "Onion", "Tomato"], optionalIngredients: ["Garlic", "Ginger"], type: "dinner" },
+        { name: "Dal Makhani", coreIngredients: ["Urad Dal", "Rajma", "Tomato"], optionalIngredients: ["Garlic", "Ginger", "Butter", "Fresh Cream"], type: "dinner" },
+        { name: "Palak Paneer", coreIngredients: ["Spinach (Palak)", "Paneer", "Onion", "Tomato"], optionalIngredients: ["Garlic", "Ghee"], type: "dinner" },
+        { name: "Kadai Paneer", coreIngredients: ["Paneer", "Capsicum", "Onion", "Tomato"], optionalIngredients: ["Garlic"], type: "dinner" },
+        { name: "Matar Paneer", coreIngredients: ["Paneer", "Peas", "Onion", "Tomato"], optionalIngredients: ["Garlic"], type: "dinner" },
+        { name: "Egg Curry", coreIngredients: ["Eggs", "Onion", "Tomato"], optionalIngredients: ["Garlic", "Ginger"], type: "dinner" },
+        { name: "Jeera Rice & Moong Dal", coreIngredients: ["Basmati Rice", "Moong Dal", "Onion", "Tomato"], optionalIngredients: ["Garlic", "Ghee"], type: "dinner" }
     ]
 };
 
@@ -124,11 +154,17 @@ function addNewRecipe() {
         return;
     }
     if (requiredIngredients.length === 0) {
-        alert("Please select at least one ingredient for this recipe.");
+        alert("Please select at least one core ingredient for this recipe.");
         return;
     }
 
-    appData.recipes.push({ name: name, ingredients: requiredIngredients, type: type });
+    // User added recipes treat all selected ingredients as Core.
+    appData.recipes.push({ 
+        name: name, 
+        coreIngredients: requiredIngredients, 
+        optionalIngredients: [], 
+        type: type 
+    });
     localStorage.setItem('myKitchenData', JSON.stringify(appData));
 
     nameInput.value = "";
@@ -206,8 +242,17 @@ function getAvailableRecipes() {
     if(document.getElementById('toggle-dinner').checked) types.push('dinner');
 
     return appData.recipes.filter(recipe => {
-        if (!types.includes(recipe.type)) return false;
-        return recipe.ingredients.every(neededIng => savedIngredients.includes(neededIng));
+        const isBreakfast = recipe.type === 'breakfast';
+        const isMainMeal = recipe.type === 'lunch' || recipe.type === 'dinner';
+
+        let typeMatch = false;
+        if (isBreakfast && types.includes('breakfast')) typeMatch = true;
+        if (isMainMeal && (types.includes('lunch') || types.includes('dinner'))) typeMatch = true;
+
+        if (!typeMatch) return false;
+        
+        // ONLY check if the user has all the core (must-have) ingredients
+        return recipe.coreIngredients.every(neededIng => savedIngredients.includes(neededIng));
     });
 }
 
@@ -222,7 +267,8 @@ function showOptions() {
 
     let html = "<h3 style='margin-top:0;'>You can make:</h3><ul style='padding-left: 20px;'>";
     possibleRecipes.forEach(r => {
-        html += `<li style='margin-bottom: 8px;'><strong>${r.name}</strong> <span style="color:var(--text-muted); font-size:12px;">(${r.type})</span></li>`;
+        const displayType = r.type === 'breakfast' ? 'Breakfast' : 'Lunch / Dinner';
+        html += `<li style='margin-bottom: 8px;'><strong>${r.name}</strong> <span style="color:var(--text-muted); font-size:12px;">(${displayType})</span></li>`;
     });
     html += "</ul>";
     resultsDiv.innerHTML = html;
@@ -231,23 +277,37 @@ function showOptions() {
 function decideForMe() {
     const possibleRecipes = getAvailableRecipes();
     const resultsDiv = document.getElementById('results');
-    const byType = { breakfast: [], lunch: [], dinner: [] };
     
-    possibleRecipes.forEach(r => byType[r.type].push(r));
+    const byType = { breakfast: [], main: [] };
+    possibleRecipes.forEach(r => {
+        if (r.type === 'breakfast') {
+            byType.breakfast.push(r);
+        } else {
+            byType.main.push(r); 
+        }
+    });
 
     let html = "";
     let madePlan = false;
 
     ['breakfast', 'lunch', 'dinner'].forEach(type => {
         if (document.getElementById(`toggle-${type}`).checked) {
-            if (byType[type].length > 0) {
-                const randomRecipe = byType[type][Math.floor(Math.random() * byType[type].length)];
+            const pool = (type === 'breakfast') ? byType.breakfast : byType.main;
+            
+            if (pool.length > 0) {
+                const randomIndex = Math.floor(Math.random() * pool.length);
+                const randomRecipe = pool[randomIndex];
+                
                 html += `
                 <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--border);">
                     <span style="display: block; font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">${type}</span>
                     <p style="font-size: 18px; font-weight: 600; margin: 0;">${randomRecipe.name}</p>
                 </div>`;
                 madePlan = true;
+                
+                if (type !== 'breakfast') {
+                    pool.splice(randomIndex, 1);
+                }
             } else {
                 html += `
                 <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--border);">
@@ -274,14 +334,12 @@ const installModal = document.getElementById('install-modal');
 const modalInstallBtn = document.getElementById('modal-install-btn');
 const closeModalBtn = document.getElementById('close-modal-btn');
 
-// Check if user already dismissed it this session
 let hasDismissedPrompt = sessionStorage.getItem('dismissedInstall');
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     
-    // Show modal if they haven't dismissed it yet
     if (installModal && !hasDismissedPrompt) {
         installModal.style.display = 'flex';
     }
@@ -299,7 +357,6 @@ if (modalInstallBtn) {
     });
 }
 
-// Close the modal and don't show it again for this browsing session
 if (closeModalBtn) {
     closeModalBtn.addEventListener('click', () => {
         installModal.style.display = 'none';
@@ -307,7 +364,6 @@ if (closeModalBtn) {
     });
 }
 
-// Hide if already installed
 window.addEventListener('appinstalled', () => {
     if (installModal) installModal.style.display = 'none';
     deferredPrompt = null;
