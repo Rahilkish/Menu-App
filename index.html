@@ -17,13 +17,12 @@
             <div class="sticky-controls">
                 <input type="text" id="search-bar" placeholder="Search your kitchen..." onkeyup="filterIngredients()">
                 <div class="view-toggle">
-                    <span style="font-size: 14px; color: var(--text-muted); font-weight: 500;">Layout:</span>
-                    <button id="btn-view-small" class="view-btn active" onclick="setView('small')">Small</button>
-                    <button id="btn-view-big" class="view-btn" onclick="setView('big')">Big</button>
+                    <button id="btn-view-list" class="view-btn" onclick="setView('list')" aria-label="List View">☰</button>
+                    <button id="btn-view-image" class="view-btn active" onclick="setView('image')" aria-label="Image View">🖼️</button>
                 </div>
             </div>
             
-            <div id="ingredient-categories" class="view-small pb-safe">
+            <div id="ingredient-categories" class="view-image pb-safe">
                 </div>
         </div>
 
@@ -37,7 +36,7 @@
                 </div>
             </div>
 
-            <button class="btn-primary zomato-btn" onclick="decideForMe()">Decide For Me ✨</button>
+            <button class="btn-primary" onclick="decideForMe()">Decide For Me ✨</button>
             <button class="btn-secondary" onclick="showOptions()">See All Possible Dishes</button>
 
             <div id="results" class="results-card">
