@@ -43,13 +43,11 @@ function renderPantry() {
             const btnText = isAdded ? '✓' : '+';
             const btnClass = isAdded ? 'add-btn added' : 'add-btn';
 
-            // SMART IMAGE LINKER: Converts "Green Chillies" to "green-chillies.jpg"
             const imgFileName = ing.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '.jpg';
 
             const itemDiv = document.createElement('div');
             itemDiv.className = 'menu-item';
             
-            // Includes the error fallback if the image isn't found
             itemDiv.innerHTML = `
                 <div class="item-main">
                     <div class="img-box">
@@ -270,30 +268,47 @@ function decideForMe() {
 // Start the app
 initApp();
 
-// --- PWA INSTALLATION LOGIC ---
+// --- PWA INSTALL MODAL LOGIC ---
 let deferredPrompt;
-const installCard = document.getElementById('install-card');
-const installBtn = document.getElementById('install-btn');
+const installModal = document.getElementById('install-modal');
+const modalInstallBtn = document.getElementById('modal-install-btn');
+const closeModalBtn = document.getElementById('close-modal-btn');
+
+// Check if user already dismissed it this session
+let hasDismissedPrompt = sessionStorage.getItem('dismissedInstall');
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    if (installCard) installCard.style.display = 'block';
+    
+    // Show modal if they haven't dismissed it yet
+    if (installModal && !hasDismissedPrompt) {
+        installModal.style.display = 'flex';
+    }
 });
 
-if (installBtn) {
-    installBtn.addEventListener('click', async () => {
+if (modalInstallBtn) {
+    modalInstallBtn.addEventListener('click', async () => {
         if (!deferredPrompt) return;
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
         if (outcome === 'accepted') {
-            installCard.style.display = 'none';
+            installModal.style.display = 'none';
         }
         deferredPrompt = null;
     });
 }
 
+// Close the modal and don't show it again for this browsing session
+if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', () => {
+        installModal.style.display = 'none';
+        sessionStorage.setItem('dismissedInstall', 'true');
+    });
+}
+
+// Hide if already installed
 window.addEventListener('appinstalled', () => {
-    if (installCard) installCard.style.display = 'none';
+    if (installModal) installModal.style.display = 'none';
     deferredPrompt = null;
 });
