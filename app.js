@@ -1,4 +1,4 @@
-// --- DEFAULT DATASET (Only used if the user hasn't saved anything yet) ---
+// --- DEFAULT DATASET ---
 const defaultData = {
     categories: {
         "Vegetables (Sabzi)": ["Onion", "Tomato", "Potato", "Green Chillies", "Garlic", "Ginger", "Spinach (Palak)", "Cauliflower", "Coriander Leaves", "Curry Leaves"],
@@ -16,7 +16,6 @@ const defaultData = {
 };
 
 // --- STATE MANAGEMENT ---
-// Load data from phone storage, or use defaults if empty
 let appData = JSON.parse(localStorage.getItem('myKitchenData')) || defaultData;
 let savedIngredients = JSON.parse(localStorage.getItem('myIndianPantry')) || [];
 
@@ -29,10 +28,11 @@ function initApp() {
 // --- RENDER FUNCTIONS ---
 function renderPantry() {
     const container = document.getElementById('ingredient-categories');
-    container.innerHTML = ''; // Clear existing
+    if (!container) return;
+    container.innerHTML = ''; 
 
     for (const [category, items] of Object.entries(appData.categories)) {
-        if (items.length === 0) continue; // Skip empty categories
+        if (items.length === 0) continue; 
 
         const section = document.createElement('div');
         section.className = 'category-section';
@@ -58,12 +58,11 @@ function renderPantry() {
     }
 }
 
-// Renders the list of checkboxes in the Setup tab for recipe creation
 function renderSetupIngredientList() {
     const container = document.getElementById('setup-ingredient-list');
-    container.innerHTML = ''; // Clear existing
+    if (!container) return;
+    container.innerHTML = ''; 
 
-    // Flatten all ingredients into one alphabetical array
     let allIngredients = [];
     for (const items of Object.values(appData.categories)) {
         allIngredients.push(...items);
@@ -77,7 +76,7 @@ function renderSetupIngredientList() {
     });
 }
 
-// --- SETUP TAB LOGIC (NEW) ---
+// --- SETUP TAB LOGIC ---
 function addNewIngredient() {
     const nameInput = document.getElementById('new-ing-name');
     const categorySelect = document.getElementById('new-ing-category');
@@ -90,23 +89,17 @@ function addNewIngredient() {
         return;
     }
 
-    // Check if it already exists
     if (appData.categories[category].includes(name)) {
         alert("This ingredient already exists in this category!");
         return;
     }
 
-    // Add to our dynamic database
     appData.categories[category].push(name);
-    
-    // Save to phone
     localStorage.setItem('myKitchenData', JSON.stringify(appData));
     
-    // Update UI
     renderPantry();
     renderSetupIngredientList();
     
-    // Reset form
     nameInput.value = "";
     alert(`${name} added to ${category}!`);
 }
@@ -129,20 +122,11 @@ function addNewRecipe() {
         return;
     }
 
-    // Add to our dynamic database
-    appData.recipes.push({
-        name: name,
-        ingredients: requiredIngredients,
-        type: type
-    });
-
-    // Save to phone
+    appData.recipes.push({ name: name, ingredients: requiredIngredients, type: type });
     localStorage.setItem('myKitchenData', JSON.stringify(appData));
 
-    // Reset form
     nameInput.value = "";
     checkboxes.forEach(cb => cb.checked = false);
-    
     alert(`${name} has been added to your recipes!`);
 }
 
@@ -181,17 +165,14 @@ function setView(mode) {
 }
 
 function switchTab(tabId) {
-    // Hide all
     document.getElementById('pantry-tab').style.display = 'none';
     document.getElementById('meals-tab').style.display = 'none';
     document.getElementById('setup-tab').style.display = 'none';
     
-    // Remove active styles
     document.getElementById('btn-pantry').classList.remove('active');
     document.getElementById('btn-meals').classList.remove('active');
     document.getElementById('btn-setup').classList.remove('active');
 
-    // Show target
     document.getElementById(tabId).style.display = 'block';
     if (tabId === 'pantry-tab') document.getElementById('btn-pantry').classList.add('active');
     if (tabId === 'meals-tab') document.getElementById('btn-meals').classList.add('active');
@@ -218,7 +199,6 @@ function getAvailableRecipes() {
     if(document.getElementById('toggle-lunch').checked) types.push('lunch');
     if(document.getElementById('toggle-dinner').checked) types.push('dinner');
 
-    // Use appData.recipes instead of the old hardcoded recipes array
     return appData.recipes.filter(recipe => {
         if (!types.includes(recipe.type)) return false;
         return recipe.ingredients.every(neededIng => savedIngredients.includes(neededIng));
@@ -279,5 +259,33 @@ function decideForMe() {
     }
 }
 
-// Start the app!
+// Start the app
 initApp();
+
+// --- PWA INSTALLATION LOGIC ---
+let deferredPrompt;
+const installCard = document.getElementById('install-card');
+const installBtn = document.getElementById('install-btn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installCard) installCard.style.display = 'block';
+});
+
+if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            installCard.style.display = 'none';
+        }
+        deferredPrompt = null;
+    });
+}
+
+window.addEventListener('appinstalled', () => {
+    if (installCard) installCard.style.display = 'none';
+    deferredPrompt = null;
+});
