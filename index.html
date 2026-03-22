@@ -15,7 +15,7 @@
     <main class="app-content">
         <div id="pantry-tab" class="tab-content active">
             <div class="sticky-controls">
-                <input type="text" id="search-bar" placeholder="Search your kitchen..." onkeyup="filterIngredients()">
+                <input type="text" id="search-bar" placeholder="Search kitchen..." onkeyup="filterIngredients()">
                 <div class="view-toggle">
                     <button id="btn-view-list" class="view-btn" onclick="setView('list')" aria-label="List View">☰</button>
                     <button id="btn-view-image" class="view-btn active" onclick="setView('image')" aria-label="Image View">🖼️</button>
@@ -43,6 +43,39 @@
                 <p class="empty-state">Tap 'Decide For Me' to get a fresh meal plan!</p>
             </div>
         </div>
+
+        <div id="setup-tab" class="tab-content" style="display: none;">
+            <div class="card">
+                <h2>Add New Ingredient</h2>
+                <p class="subtitle">Add items to your pantry list.</p>
+                <input type="text" id="new-ing-name" placeholder="e.g., Capsicum" class="form-input">
+                <select id="new-ing-category" class="form-input">
+                    <option value="Vegetables (Sabzi)">Vegetables (Sabzi)</option>
+                    <option value="Dairy, Oil & Protein">Dairy, Oil & Protein</option>
+                    <option value="Lentils & Grains (Dal/Atta)">Lentils & Grains (Dal/Atta)</option>
+                </select>
+                <button class="btn-primary form-btn" onclick="addNewIngredient()">Add to Pantry</button>
+            </div>
+
+            <div class="card">
+                <h2>Add Custom Recipe</h2>
+                <p class="subtitle">Create a dish and select what it needs.</p>
+                <input type="text" id="new-recipe-name" placeholder="e.g., Paneer Tikka" class="form-input">
+                
+                <p class="subtitle" style="margin-top: 15px; margin-bottom: 5px;">Meal Type:</p>
+                <select id="new-recipe-type" class="form-input">
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                </select>
+
+                <p class="subtitle" style="margin-top: 15px; margin-bottom: 5px;">Required Ingredients:</p>
+                <div id="setup-ingredient-list" class="setup-grid">
+                    </div>
+
+                <button class="btn-primary form-btn" onclick="addNewRecipe()" style="margin-top: 15px;">Save Recipe</button>
+            </div>
+        </div>
     </main>
 
     <nav class="bottom-nav">
@@ -53,6 +86,10 @@
         <button class="nav-item" id="btn-meals" onclick="switchTab('meals-tab')">
             <span class="nav-icon">🍲</span>
             <span class="nav-text">Meals</span>
+        </button>
+        <button class="nav-item" id="btn-setup" onclick="switchTab('setup-tab')">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-text">Setup</span>
         </button>
     </nav>
 
