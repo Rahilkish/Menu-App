@@ -1,12 +1,12 @@
-/* --- BASE & TYPOGRAPHY --- */
 :root {
-    --primary: #FF7E67; /* A warm, appetizing saffron/coral */
-    --bg-color: #F8F9FA;
+    --zomato-red: #E23744;
+    --zomato-red-light: #fcebeb;
+    --bg-color: #f4f4f5;
     --card-bg: #FFFFFF;
-    --text-main: #2D3436;
-    --text-muted: #636E72;
-    --border: #DFE6E9;
-    --nav-height: 70px;
+    --text-main: #1c1c1c;
+    --text-muted: #696969;
+    --border: #e8e8e8;
+    --nav-height: 65px;
 }
 
 body {
@@ -15,185 +15,181 @@ body {
     color: var(--text-main);
     margin: 0;
     padding: 0;
-    -webkit-tap-highlight-color: transparent; /* Removes blue tap flash on mobile */
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* --- HEADER --- */
 .app-header {
     background: var(--card-bg);
-    padding: 20px;
-    text-align: center;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    padding: 15px 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
-.app-header h1 {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 700;
-}
+.app-header h1 { margin: 0; font-size: 20px; font-weight: 800; }
 
-/* --- MAIN CONTENT --- */
 .app-content {
-    padding: 15px;
-    padding-bottom: calc(var(--nav-height) + 20px); /* Space for bottom nav */
+    padding-bottom: calc(var(--nav-height) + 20px);
     max-width: 600px;
     margin: 0 auto;
 }
 
-/* --- PANTRY TAB: SEARCH & CARDS --- */
-.search-container {
-    margin-bottom: 20px;
+/* --- STICKY SEARCH & TOGGLE --- */
+.sticky-controls {
+    position: sticky;
+    top: 0;
+    background: var(--bg-color);
+    padding: 15px;
+    z-index: 5;
 }
 #search-bar {
     width: 100%;
-    padding: 16px;
+    padding: 14px 16px;
     font-size: 16px;
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 12px;
     box-sizing: border-box;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    margin-bottom: 12px;
 }
-#search-bar:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(255, 126, 103, 0.2);
+#search-bar:focus { outline: none; border-color: var(--zomato-red); }
+
+.view-toggle {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+.view-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+}
+.view-btn.active {
+    background: var(--zomato-red-light);
+    color: var(--zomato-red);
+    border-color: var(--zomato-red);
 }
 
+/* --- ZOMATO STYLE MENU ITEMS --- */
 .category-section {
     background: var(--card-bg);
-    border-radius: 16px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    margin-bottom: 15px;
+    padding: 20px 15px;
 }
 .category-section h3 {
     margin: 0 0 15px 0;
-    font-size: 16px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    font-size: 18px;
+    font-weight: 700;
 }
-.grid {
+
+.menu-item {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px dashed var(--border);
+    transition: all 0.2s ease;
 }
+.menu-item:last-child { border-bottom: none; padding-bottom: 0; }
 
-/* --- CHECKBOXES AS PILLS --- */
-.ingredient-label {
-    display: inline-flex;
-    align-items: center;
-    background: var(--bg-color);
-    padding: 10px 16px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    font-size: 15px;
-    transition: 0.2s ease;
+/* Left Side: Info */
+.item-info { flex: 1; padding-right: 15px; }
+.veg-mark {
+    width: 12px; height: 12px;
+    border: 1px solid #1e8738;
+    border-radius: 2px;
+    display: inline-flex; justify-content: center; align-items: center;
+    margin-bottom: 6px;
 }
-.ingredient-label:has(input:checked) {
-    background: rgba(255, 126, 103, 0.1);
-    border-color: var(--primary);
-    color: var(--primary);
+.veg-mark::after { content: ''; width: 6px; height: 6px; background: #1e8738; border-radius: 50%; }
+.veg-mark.non-veg { border-color: #e23744; }
+.veg-mark.non-veg::after { background: #e23744; }
+
+.item-name {
+    margin: 0;
+    font-size: 17px;
     font-weight: 600;
-}
-input[type="checkbox"] {
-    display: none; /* Hide default checkbox */
+    color: var(--text-main);
 }
 
-/* --- MEALS TAB --- */
-.card {
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-}
-.card h2 { margin: 0 0 5px 0; }
-.subtitle { margin: 0 0 15px 0; color: var(--text-muted); font-size: 14px; }
-
-.meal-toggles {
-    display: flex;
-    gap: 10px;
-}
-.toggle-pill {
-    flex: 1;
-    text-align: center;
-    background: var(--bg-color);
-    padding: 12px;
-    border-radius: 12px;
-    font-weight: 600;
-    border: 1px solid var(--border);
-}
-.toggle-pill:has(input:checked) {
-    background: var(--text-main);
-    color: white;
-    border-color: var(--text-main);
-}
-
-/* --- BUTTONS --- */
-.actions {
+/* Right Side: Image & Add Button */
+.item-image-box {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
+    align-items: center;
 }
-button {
-    width: 100%;
-    padding: 16px;
-    border-radius: 14px;
-    font-size: 16px;
-    font-weight: 700;
-    border: none;
+.img-placeholder {
+    background: #f8f8f8;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: #ccc;
+    object-fit: cover;
+}
+
+/* The iconic Zomato ADD button */
+.add-btn {
+    position: absolute;
+    bottom: -10px;
+    background: white;
+    color: var(--zomato-red);
+    border: 1px solid var(--border);
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     cursor: pointer;
+    text-transform: uppercase;
 }
-.btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(255, 126, 103, 0.3); }
-.btn-secondary { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border); }
-
-/* --- RESULTS --- */
-.results-card {
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 16px;
-    min-height: 100px;
+.add-btn.added {
+    background: var(--zomato-red-light);
+    border-color: var(--zomato-red);
 }
-.empty-state { text-align: center; color: var(--text-muted); font-style: italic; }
-.meal-plan-item { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
-.meal-plan-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-.meal-label { display: block; font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;}
-.meal-dish { font-size: 18px; font-weight: 600; margin: 0;}
 
-/* --- BOTTOM NAVIGATION BAR --- */
+/* --- DYNAMIC VIEWS (Small vs Big) --- */
+/* SMALL VIEW */
+.view-small .img-placeholder { width: 100px; height: 100px; }
+.view-small .item-name { font-size: 16px; }
+
+/* BIG VIEW */
+.view-big .menu-item { flex-direction: column; }
+.view-big .img-placeholder { width: 100%; height: 180px; margin-top: 10px; }
+.view-big .item-name { font-size: 20px; }
+.view-big .add-btn { bottom: 10px; right: 10px; } /* Moves button inside the big image */
+
+/* --- BOTTOM NAV & MISC --- */
 .bottom-nav {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     height: var(--nav-height);
     background: var(--card-bg);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    box-shadow: 0 -2px 15px rgba(0,0,0,0.05);
-    padding-bottom: env(safe-area-inset-bottom); /* iPhone X+ notch support */
+    display: flex; justify-content: space-around; align-items: center;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 100;
 }
 .nav-item {
-    background: none;
-    border: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    color: var(--text-muted);
-    width: auto;
-    padding: 10px 20px;
+    background: none; border: none;
+    display: flex; flex-direction: column; align-items: center;
+    color: var(--text-muted); padding: 10px;
 }
-.nav-item.active {
-    color: var(--primary);
-}
-.nav-icon { font-size: 24px; }
-.nav-text { font-size: 12px; font-weight: 600; }
+.nav-item.active { color: var(--zomato-red); }
+.nav-icon { font-size: 22px; margin-bottom: 4px; }
+.nav-text { font-size: 11px; font-weight: 700; text-transform: uppercase; }
+
+.card { background: var(--card-bg); padding: 20px; margin: 15px; border-radius: 12px; }
+.meal-toggles { display: flex; gap: 10px; margin-top: 15px;}
+.toggle-pill { flex: 1; text-align: center; padding: 10px; border-radius: 8px; font-weight: 600; border: 1px solid var(--border); }
+.toggle-pill:has(input:checked) { background: var(--zomato-red-light); color: var(--zomato-red); border-color: var(--zomato-red); }
+input[type="checkbox"] { display: none; }
+
+button { width: 100%; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 700; border: none; margin-bottom: 15px; cursor: pointer;}
+.btn-primary.zomato-btn { background: var(--zomato-red); color: white; margin: 0 15px 15px 15px; width: calc(100% - 30px); }
+.btn-secondary { background: transparent; color: var(--zomato-red); border: 1px solid var(--zomato-red); margin: 0 15px; width: calc(100% - 30px); }
+.results-card { background: var(--card-bg); padding: 20px; margin: 15px; border-radius: 12px; }
