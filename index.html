@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Decider</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ Meal Decider</h1>
+        <p>What's in your kitchen?</p>
+        
+        <div id="ingredient-list" class="grid">
+            </div>
+
+        <h2>Select Meals</h2>
+        <div class="meal-toggles">
+            <label><input type="checkbox" id="toggle-breakfast" checked> Breakfast</label>
+            <label><input type="checkbox" id="toggle-lunch" checked> Lunch</label>
+            <label><input type="checkbox" id="toggle-dinner" checked> Dinner</label>
+        </div>
+
+        <div class="actions">
+            <button onclick="showOptions()">Show All Options</button>
+            <button class="primary" onclick="decideForMe()">Decide For Me!</button>
+        </div>
+
+        <div id="results">
+            </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Service Worker for "Download App" feature
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
