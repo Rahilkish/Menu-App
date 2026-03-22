@@ -4,8 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kitchen Decider</title>
+    
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
+    
+    <meta name="theme-color" content="#FF7E67">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Kitchen">
+    <link rel="apple-touch-icon" href="logo.png">
 </head>
 <body>
     <header class="app-header">
@@ -94,5 +101,11 @@
     </nav>
 
     <script src="app.js"></script>
+    <script>
+        // Registers the Service Worker for offline PWA installation
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
 </body>
 </html>
