@@ -1,69 +1,164 @@
-// --- REORDERED DATASET ---
-const categorizedIngredients = {
-    // Fresh/Perishable things first
-    "Vegetables (Sabzi)": ["Onion", "Tomato", "Potato", "Green Chillies", "Garlic", "Ginger", "Spinach (Palak)", "Cauliflower", "Coriander Leaves", "Curry Leaves"],
-    // Dairy & Proteins next
-    "Dairy, Oil & Protein": ["Cooking Oil", "Ghee", "Milk", "Eggs", "Paneer", "Chicken"],
-    // Dry storage last
-    "Lentils & Grains (Dal/Atta)": ["Basmati Rice", "Toor Dal", "Moong Dal", "Wheat Flour (Atta)", "Poha"]
+// --- DEFAULT DATASET (Only used if the user hasn't saved anything yet) ---
+const defaultData = {
+    categories: {
+        "Vegetables (Sabzi)": ["Onion", "Tomato", "Potato", "Green Chillies", "Garlic", "Ginger", "Spinach (Palak)", "Cauliflower", "Coriander Leaves", "Curry Leaves"],
+        "Dairy, Oil & Protein": ["Cooking Oil", "Ghee", "Milk", "Eggs", "Paneer", "Chicken"],
+        "Lentils & Grains (Dal/Atta)": ["Basmati Rice", "Toor Dal", "Moong Dal", "Wheat Flour (Atta)", "Poha"]
+    },
+    recipes: [
+        { name: "Kanda Batata Poha", ingredients: ["Poha", "Onion", "Potato", "Curry Leaves", "Cooking Oil", "Green Chillies"], type: "breakfast" },
+        { name: "Egg Bhurji", ingredients: ["Eggs", "Onion", "Tomato", "Green Chillies", "Cooking Oil"], type: "breakfast" },
+        { name: "Dal Tadka & Rice", ingredients: ["Toor Dal", "Basmati Rice", "Onion", "Tomato", "Garlic", "Ghee"], type: "lunch" },
+        { name: "Aloo Gobi Sabzi", ingredients: ["Potato", "Cauliflower", "Onion", "Tomato", "Cooking Oil"], type: "lunch" },
+        { name: "Simple Chicken Curry", ingredients: ["Chicken", "Onion", "Tomato", "Garlic", "Ginger", "Cooking Oil"], type: "dinner" },
+        { name: "Palak Paneer", ingredients: ["Spinach (Palak)", "Paneer", "Onion", "Tomato", "Garlic", "Ghee"], type: "dinner" }
+    ]
 };
 
-// --- RECIPES (Masalas removed, assumed always available) ---
-const recipes = [
-    { name: "Kanda Batata Poha", ingredients: ["Poha", "Onion", "Potato", "Curry Leaves", "Cooking Oil", "Green Chillies"], type: "breakfast" },
-    { name: "Egg Bhurji", ingredients: ["Eggs", "Onion", "Tomato", "Green Chillies", "Cooking Oil"], type: "breakfast" },
-    { name: "Dal Tadka & Rice", ingredients: ["Toor Dal", "Basmati Rice", "Onion", "Tomato", "Garlic", "Ghee"], type: "lunch" },
-    { name: "Aloo Gobi Sabzi", ingredients: ["Potato", "Cauliflower", "Onion", "Tomato", "Cooking Oil"], type: "lunch" },
-    { name: "Simple Chicken Curry", ingredients: ["Chicken", "Onion", "Tomato", "Garlic", "Ginger", "Cooking Oil"], type: "dinner" },
-    { name: "Palak Paneer", ingredients: ["Spinach (Palak)", "Paneer", "Onion", "Tomato", "Garlic", "Ghee"], type: "dinner" }
-];
-
-// Load memory from device
+// --- STATE MANAGEMENT ---
+// Load data from phone storage, or use defaults if empty
+let appData = JSON.parse(localStorage.getItem('myKitchenData')) || defaultData;
 let savedIngredients = JSON.parse(localStorage.getItem('myIndianPantry')) || [];
-const categoryContainer = document.getElementById('ingredient-categories');
 
-for (const [category, items] of Object.entries(categorizedIngredients)) {
-    const section = document.createElement('div');
-    section.className = 'category-section';
-    section.innerHTML = `<h3>${category}</h3>`;
-
-    items.forEach(ing => {
-        const isAdded = savedIngredients.includes(ing);
-        // Change text to + or Checkmark
-        const btnText = isAdded ? '✓' : '+';
-        const btnClass = isAdded ? 'add-btn added' : 'add-btn';
-
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'menu-item';
-        
-        itemDiv.innerHTML = `
-            <div class="item-main">
-                <div class="img-placeholder">📸</div>
-                <h4 class="item-name">${ing}</h4>
-            </div>
-            <button class="${btnClass}" onclick="toggleIngredient('${ing}', this)">${btnText}</button>
-        `;
-        section.appendChild(itemDiv);
-    });
-    categoryContainer.appendChild(section);
+// --- INITIALIZATION ---
+function initApp() {
+    renderPantry();
+    renderSetupIngredientList();
 }
 
-// --- LOGIC ---
+// --- RENDER FUNCTIONS ---
+function renderPantry() {
+    const container = document.getElementById('ingredient-categories');
+    container.innerHTML = ''; // Clear existing
+
+    for (const [category, items] of Object.entries(appData.categories)) {
+        if (items.length === 0) continue; // Skip empty categories
+
+        const section = document.createElement('div');
+        section.className = 'category-section';
+        section.innerHTML = `<h3>${category}</h3>`;
+
+        items.forEach(ing => {
+            const isAdded = savedIngredients.includes(ing);
+            const btnText = isAdded ? '✓' : '+';
+            const btnClass = isAdded ? 'add-btn added' : 'add-btn';
+
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'menu-item';
+            itemDiv.innerHTML = `
+                <div class="item-main">
+                    <div class="img-placeholder">📸</div>
+                    <h4 class="item-name">${ing}</h4>
+                </div>
+                <button class="${btnClass}" onclick="toggleIngredient('${ing}', this)">${btnText}</button>
+            `;
+            section.appendChild(itemDiv);
+        });
+        container.appendChild(section);
+    }
+}
+
+// Renders the list of checkboxes in the Setup tab for recipe creation
+function renderSetupIngredientList() {
+    const container = document.getElementById('setup-ingredient-list');
+    container.innerHTML = ''; // Clear existing
+
+    // Flatten all ingredients into one alphabetical array
+    let allIngredients = [];
+    for (const items of Object.values(appData.categories)) {
+        allIngredients.push(...items);
+    }
+    allIngredients.sort();
+
+    allIngredients.forEach(ing => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" value="${ing}" class="recipe-req-checkbox"> ${ing}`;
+        container.appendChild(label);
+    });
+}
+
+// --- SETUP TAB LOGIC (NEW) ---
+function addNewIngredient() {
+    const nameInput = document.getElementById('new-ing-name');
+    const categorySelect = document.getElementById('new-ing-category');
+    
+    const name = nameInput.value.trim();
+    const category = categorySelect.value;
+
+    if (name === "") {
+        alert("Please enter an ingredient name.");
+        return;
+    }
+
+    // Check if it already exists
+    if (appData.categories[category].includes(name)) {
+        alert("This ingredient already exists in this category!");
+        return;
+    }
+
+    // Add to our dynamic database
+    appData.categories[category].push(name);
+    
+    // Save to phone
+    localStorage.setItem('myKitchenData', JSON.stringify(appData));
+    
+    // Update UI
+    renderPantry();
+    renderSetupIngredientList();
+    
+    // Reset form
+    nameInput.value = "";
+    alert(`${name} added to ${category}!`);
+}
+
+function addNewRecipe() {
+    const nameInput = document.getElementById('new-recipe-name');
+    const typeSelect = document.getElementById('new-recipe-type');
+    const checkboxes = document.querySelectorAll('.recipe-req-checkbox:checked');
+    
+    const name = nameInput.value.trim();
+    const type = typeSelect.value;
+    const requiredIngredients = Array.from(checkboxes).map(cb => cb.value);
+
+    if (name === "") {
+        alert("Please enter a recipe name.");
+        return;
+    }
+    if (requiredIngredients.length === 0) {
+        alert("Please select at least one ingredient for this recipe.");
+        return;
+    }
+
+    // Add to our dynamic database
+    appData.recipes.push({
+        name: name,
+        ingredients: requiredIngredients,
+        type: type
+    });
+
+    // Save to phone
+    localStorage.setItem('myKitchenData', JSON.stringify(appData));
+
+    // Reset form
+    nameInput.value = "";
+    checkboxes.forEach(cb => cb.checked = false);
+    
+    alert(`${name} has been added to your recipes!`);
+}
+
+// --- STANDARD LOGIC ---
 function toggleIngredient(ingredient, buttonElement) {
     const index = savedIngredients.indexOf(ingredient);
     
     if (index === -1) {
-        // Add item
         savedIngredients.push(ingredient);
         buttonElement.innerText = '✓';
         buttonElement.classList.add('added');
     } else {
-        // Remove item
         savedIngredients.splice(index, 1);
         buttonElement.innerText = '+';
         buttonElement.classList.remove('added');
     }
-    // Save to phone memory immediately
     localStorage.setItem('myIndianPantry', JSON.stringify(savedIngredients));
 }
 
@@ -86,14 +181,21 @@ function setView(mode) {
 }
 
 function switchTab(tabId) {
+    // Hide all
     document.getElementById('pantry-tab').style.display = 'none';
     document.getElementById('meals-tab').style.display = 'none';
+    document.getElementById('setup-tab').style.display = 'none';
+    
+    // Remove active styles
     document.getElementById('btn-pantry').classList.remove('active');
     document.getElementById('btn-meals').classList.remove('active');
+    document.getElementById('btn-setup').classList.remove('active');
 
+    // Show target
     document.getElementById(tabId).style.display = 'block';
     if (tabId === 'pantry-tab') document.getElementById('btn-pantry').classList.add('active');
     if (tabId === 'meals-tab') document.getElementById('btn-meals').classList.add('active');
+    if (tabId === 'setup-tab') document.getElementById('btn-setup').classList.add('active');
 }
 
 function filterIngredients() {
@@ -116,7 +218,8 @@ function getAvailableRecipes() {
     if(document.getElementById('toggle-lunch').checked) types.push('lunch');
     if(document.getElementById('toggle-dinner').checked) types.push('dinner');
 
-    return recipes.filter(recipe => {
+    // Use appData.recipes instead of the old hardcoded recipes array
+    return appData.recipes.filter(recipe => {
         if (!types.includes(recipe.type)) return false;
         return recipe.ingredients.every(neededIng => savedIngredients.includes(neededIng));
     });
@@ -175,3 +278,6 @@ function decideForMe() {
         resultsDiv.innerHTML = html;
     }
 }
+
+// Start the app!
+initApp();
