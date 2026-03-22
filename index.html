@@ -57,8 +57,8 @@
                 <p class="subtitle">Add items to your pantry list.</p>
                 <input type="text" id="new-ing-name" placeholder="e.g., Capsicum" class="form-input">
                 <select id="new-ing-category" class="form-input">
-                    <option value="Vegetables (Sabzi)">Vegetables (Sabzi)</option>
-                    <option value="Dairy, Oil & Protein">Dairy, Oil & Protein</option>
+                    <option value="Vegetables & Fresh (Sabzi)">Vegetables & Fresh (Sabzi)</option>
+                    <option value="Dairy & Protein">Dairy & Protein</option>
                     <option value="Lentils & Grains (Dal/Atta)">Lentils & Grains (Dal/Atta)</option>
                 </select>
                 <button class="btn-primary form-btn" onclick="addNewIngredient()">Add to Pantry</button>
@@ -66,17 +66,16 @@
 
             <div class="card">
                 <h2>Add Custom Recipe</h2>
-                <p class="subtitle">Create a dish and select what it needs.</p>
+                <p class="subtitle">Create a dish and select its core must-have ingredients.</p>
                 <input type="text" id="new-recipe-name" placeholder="e.g., Paneer Tikka" class="form-input">
                 
                 <p class="subtitle" style="margin-top: 15px; margin-bottom: 5px;">Meal Type:</p>
                 <select id="new-recipe-type" class="form-input">
                     <option value="breakfast">Breakfast</option>
-                    <option value="lunch">Lunch</option>
-                    <option value="dinner">Dinner</option>
+                    <option value="lunch">Lunch / Dinner</option>
                 </select>
 
-                <p class="subtitle" style="margin-top: 15px; margin-bottom: 5px;">Required Ingredients:</p>
+                <p class="subtitle" style="margin-top: 15px; margin-bottom: 5px;">Core Ingredients:</p>
                 <div id="setup-ingredient-list" class="setup-grid">
                     </div>
 
